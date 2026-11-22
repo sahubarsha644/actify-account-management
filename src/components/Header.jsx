@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useProfile } from "../context/ProfileContext";
 
 const pageTitles = {
   "/": "Dashboard",
@@ -15,14 +16,37 @@ const pageTitles = {
   "/profile": "Profile",
   "/inbox": "Inbox",
   "/jobs": "My Jobs",
-  "/test-results": "Test Results"
+  "/test-results": "Test Results",
 };
 
 export default function Header() {
   const location = useLocation();
-  const title = pageTitles[location.pathname] || "Dashboard";
+  const title =
+    pageTitles[location.pathname] || "Dashboard";
 
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  // Get saved profile details
+  const { profile } = useProfile();
+
+  const personal = profile?.personal || {};
+
+  const fullName = [
+    personal.firstName,
+    personal.middleName,
+    personal.lastName,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  const displayName = fullName || "User";
+
+  const avatarLetter = displayName
+    .charAt(0)
+    .toUpperCase();
+
+  const [showProfileMenu, setShowProfileMenu] =
+    useState(false);
+
   const profileRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -36,10 +60,16 @@ export default function Header() {
       }
     };
 
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener(
+      "mousedown",
+      handleOutsideClick
+    );
 
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
     };
   }, []);
 
@@ -52,7 +82,10 @@ export default function Header() {
     <header className="top-header">
       <div className="header-title">
         <strong>{title}</strong>
-        <small>Actify Business › {title}</small>
+
+        <small>
+          Actify Business › {title}
+        </small>
       </div>
 
       <div className="header-right">
@@ -67,26 +100,41 @@ export default function Header() {
         </button>
 
         {/* Profile Dropdown */}
-        <div className="profile-dropdown" ref={profileRef}>
+        <div
+          className="profile-dropdown"
+          ref={profileRef}
+        >
           <button
             type="button"
             className="header-user profile-trigger"
             aria-haspopup="menu"
             aria-expanded={showProfileMenu}
             onClick={() =>
-              setShowProfileMenu((prev) => !prev)
+              setShowProfileMenu(
+                (prev) => !prev
+              )
             }
           >
-            <div className="avatar">D</div>
-            <span>Deepu</span>
+            {/* Dynamic Avatar */}
+            <div className="avatar">
+              {avatarLetter}
+            </div>
+
+            {/* Dynamic Name */}
+            <span>{displayName}</span>
           </button>
 
           {showProfileMenu && (
-            <div className="profile-dropdown-menu" role="menu">
+            <div
+              className="profile-dropdown-menu"
+              role="menu"
+            >
               <Link
                 to="/profile"
                 role="menuitem"
-                onClick={() => setShowProfileMenu(false)}
+                onClick={() =>
+                  setShowProfileMenu(false)
+                }
               >
                 Profile
               </Link>
