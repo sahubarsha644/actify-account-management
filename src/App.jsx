@@ -11,8 +11,11 @@ import {
 } from "react-router-dom";
 
 import { AccountProvider } from "./context/AccountContext";
+import { ProfileProvider } from "./context/ProfileContext";
+
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
+
 import Dashboard from "./pages/Dashboard";
 import Accounts from "./pages/Accounts";
 import AccountReport from "./pages/AccountReport";
@@ -26,12 +29,10 @@ function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Close sidebar whenever page changes
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname]);
 
-  // Close sidebar when Escape is pressed
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -39,10 +40,16 @@ function AppLayout() {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
     };
   }, []);
 
@@ -68,7 +75,11 @@ function AppLayout() {
       )}
 
       {/* Sidebar */}
-      <div className={sidebarOpen ? "sidebar-open" : ""}>
+      <div
+        className={
+          sidebarOpen ? "sidebar-open" : ""
+        }
+      >
         <Sidebar />
 
         {sidebarOpen && (
@@ -86,17 +97,38 @@ function AppLayout() {
       {/* Header */}
       <Header />
 
-      {/* Existing routes */}
+      {/* Routes */}
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/accounts" element={<Accounts />} />
-        <Route path="/account-report" element={<AccountReport />} />
-        <Route path="/account-upload" element={<AccountUpload />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/accounts"
+          element={<Accounts />}
+        />
+
+        <Route
+          path="/account-report"
+          element={<AccountReport />}
+        />
+
+        <Route
+          path="/account-upload"
+          element={<AccountUpload />}
+        />
+
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
 
         <Route
           path="/contacts"
-          element={<EmptyPage type="contacts" />}
+          element={
+            <EmptyPage type="contacts" />
+          }
         />
 
         <Route
@@ -111,7 +143,9 @@ function AppLayout() {
 
         <Route
           path="/feedback"
-          element={<EmptyPage type="feedback" />}
+          element={
+            <EmptyPage type="feedback" />
+          }
         />
 
         <Route
@@ -126,10 +160,15 @@ function AppLayout() {
 
         <Route
           path="/test-results"
-          element={<EmptyPage type="test-results" />}
+          element={
+            <EmptyPage type="test-results" />
+          }
         />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
       </Routes>
     </>
   );
@@ -138,9 +177,11 @@ function AppLayout() {
 function App() {
   return (
     <AccountProvider>
-      <BrowserRouter>
-        <AppLayout />
-      </BrowserRouter>
+      <ProfileProvider>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </ProfileProvider>
     </AccountProvider>
   );
 }
