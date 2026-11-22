@@ -150,12 +150,13 @@ export default function Profile() {
 
   const savePersonal = (e) => {
     e.preventDefault();
-    saveProfile(profile, "Personal details saved successfully.");
+    saveProfile(profile, "Personal details saved. Continue with education.");
+    setTab("Education");
   };
 
   const saveOther = (e) => {
     e.preventDefault();
-    saveProfile(profile, "Other details saved successfully.");
+    saveProfile(profile, "Profile completed! All details have been saved successfully.");
   };
 
   const addTag = (key, value, clear) => {
@@ -226,6 +227,7 @@ export default function Profile() {
     setEducationForm({ ...blankEducation });
     setEducationEditId(null);
     setEducationOpen(false);
+    setTab("Experience");
   };
 
   const editEducation = (record) => {
@@ -279,6 +281,7 @@ export default function Profile() {
     setExperienceForm({ ...blankExperience });
     setExperienceEditId(null);
     setExperienceOpen(false);
+    setTab("Other");
   };
 
   const editExperience = (record) => {
@@ -651,6 +654,12 @@ export default function Profile() {
             </form>
           )}
 
+          {!educationOpen && (
+            <div className="profile-actions">
+              <button type="button" className="profile-primary-btn" onClick={() => changeTab("Experience")}>Continue to Experience →</button>
+            </div>
+          )}
+
           {profile.education.length === 0 && !educationOpen && (
             <EmptyState
               icon={GraduationCap}
@@ -871,6 +880,12 @@ export default function Profile() {
                 </button>
               </div>
             </form>
+          )}
+
+          {!experienceOpen && (
+            <div className="profile-actions">
+              <button type="button" className="profile-primary-btn" onClick={() => changeTab("Other")}>Continue to Other →</button>
+            </div>
           )}
 
           {profile.experience.length === 0 && !experienceOpen && (
