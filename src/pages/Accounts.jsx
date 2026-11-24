@@ -33,7 +33,8 @@ const columns = [
   { key: "website", label: "Website" },
   { key: "industry", label: "Industry" },
   { key: "status", label: "Account Status" },
-  { key: "remark", label: "Remark" }
+  { key: "remark", label: "Remark" },
+  { key: "date", label: "Date" }
 ];
 
 export default function Accounts() {
@@ -49,7 +50,7 @@ export default function Accounts() {
   const [appliedSearch, setAppliedSearch] = useState("");
 
   const [sort, setSort] = useState({
-    key: "name",
+    key: "date",
     direction: "asc"
   });
 
@@ -93,7 +94,8 @@ export default function Accounts() {
         account.website,
         account.industry,
         account.status,
-        account.remark
+        account.remark,
+        account.date
       ].some((value) =>
         String(value ?? "").toLowerCase().includes(query)
       );
@@ -193,8 +195,8 @@ export default function Accounts() {
       industry: account.industry || "",
       status:
         account.status === "Active" ||
-        account.status === true ||
-        account.status === "true"
+          account.status === true ||
+          account.status === "true"
           ? "Active"
           : "Inactive",
       remark: account.remark || ""
@@ -244,7 +246,7 @@ export default function Accounts() {
     const emailExists = accounts.some(
       (account) =>
         String(account.email ?? "").toLowerCase().trim() ===
-          cleaned.email.toLowerCase() &&
+        cleaned.email.toLowerCase() &&
         account.id !== editingId
     );
 
@@ -256,7 +258,8 @@ export default function Accounts() {
     if (editingId !== null) {
       updateAccount(editingId, cleaned);
     } else {
-      addAccount(cleaned);
+      addAccount(cleaned)
+      date: new Date().toISOString();
     }
 
     setEditingId(null);
@@ -373,11 +376,10 @@ export default function Accounts() {
                   {columns.map((column) => (
                     <th key={column.key}>
                       <button
-                        className={`account-sort-btn ${
-                          sort.key === column.key
+                        className={`account-sort-btn ${sort.key === column.key
                             ? "selected-sort"
                             : ""
-                        }`}
+                          }`}
                         onClick={() => handleSort(column.key)}
                       >
                         {column.label}
@@ -387,7 +389,7 @@ export default function Accounts() {
                             size={11}
                             className={
                               sort.key === column.key &&
-                              sort.direction === "asc"
+                                sort.direction === "asc"
                                 ? "sort-active"
                                 : ""
                             }
@@ -397,7 +399,7 @@ export default function Accounts() {
                             size={11}
                             className={
                               sort.key === column.key &&
-                              sort.direction === "desc"
+                                sort.direction === "desc"
                                 ? "sort-active"
                                 : ""
                             }
@@ -464,7 +466,7 @@ export default function Accounts() {
                           {account.remark || "—"}
                         </span>
                       </td>
-
+                      <td>{account.date}</td>
                       <td className="account-actions-cell">
                         <div
                           className="account-action-wrapper"
@@ -516,7 +518,7 @@ export default function Accounts() {
                 {filteredAccounts.length === 0 && (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={9}
                       className="account-no-records"
                     >
                       No accounts found.
